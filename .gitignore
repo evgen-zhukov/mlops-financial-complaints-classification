@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# DVC
+/data/raw/*
+/data/processed/*
+/data/labeled/*
+
+!/data/raw/.gitkeep
+!/data/processed/.gitkeep
+!/data/labeled/.gitkeep
+
+!/data/raw/*.dvc
+!/data/processed/*.dvc
+!/data/labeled/*.dvc

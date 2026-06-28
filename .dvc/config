@@ -1,0 +1,8 @@
+[core]
+    remote = minio
+['remote "minio"']
+    url = s3://mlops-dataset/dvc
+    endpointurl = http://56.228.8.133:9000
+    access_key_id = minioadmin
+    secret_access_key = minioadmin123
+    use_ssl = false

@@ -1,0 +1,5 @@
+outs:
+- md5: b4af8a72fb0cef58448b38da3730ab40
+  size: 269516
+  hash: md5
+  path: financial_complaints_sample.csv

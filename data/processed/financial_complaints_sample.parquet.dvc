@@ -1,0 +1,5 @@
+outs:
+- md5: a54db65e0d3b729cba56848ca03b8155
+  size: 141858
+  hash: md5
+  path: financial_complaints_sample.parquet
