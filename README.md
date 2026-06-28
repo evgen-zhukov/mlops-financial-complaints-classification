@@ -38,24 +38,6 @@ data/processed/financial_complaints_sample.parquet
 
 The sample contains 200 records, 40 records per category.
 
-## Project Structure
-
-
-.
-├── data/
-│   ├── raw/
-│   ├── processed/
-│   └── labeled/
-├── scripts/
-│   └── prepare_dataset.py
-├── src/
-│   └── data/
-│       └── complaints_dataset.py
-├── requirements.txt
-├── .dvc/
-├── .gitignore
-└── README.md
-
 
 ## Data Preparation
 
