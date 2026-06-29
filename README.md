@@ -116,15 +116,15 @@ s3://mlops-dataset/dvc
 The data flow is:
 
 CFPB source dataset
-        ↓
+        ->
 prepare_dataset.py
-        ↓
+        ->
 balanced CSV sample
-        ↓
+        ->
 Label Studio annotation
-        ↓
+        ->
 annotation export JSON
-        ↓
+        ->
 DVC versioning
-        ↓
+        ->
 MinIO object storage

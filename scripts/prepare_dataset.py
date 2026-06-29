@@ -10,6 +10,7 @@ from src.data.complaints_dataset import (
     create_balanced_sample,
     download_file,
     extract_zip,
+    create_training_dataset,
 )
 
 
@@ -38,6 +39,13 @@ def main() -> None:
         output_csv_path=RAW_SAMPLE_CSV_PATH,
         output_parquet_path=PROCESSED_SAMPLE_PARQUET_PATH,
         samples_per_class=40,
+    )
+
+    training_dataset_path = PROJECT_ROOT / "data" / "processed" / "financial_complaints_training.csv"
+
+    create_training_dataset(
+        extracted_csv_path,
+        training_dataset_path,
     )
 
 

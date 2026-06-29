@@ -149,3 +149,55 @@ def create_balanced_sample(
     logger.info("Saved Parquet sample to %s", output_parquet_path)
     logger.info("Final sample size: %s rows", len(sampled_df))
     logger.info("Final class distribution: %s", sampled_df["product_category"].value_counts().to_dict())
+
+def create_training_dataset(
+    input_csv_path: Path,
+    output_csv_path: Path,
+    samples_per_class: int = 500,
+    random_state: int = 42,
+) -> None:
+    logger.info("Creating training dataset from %s", input_csv_path)
+
+    use_columns = [TEXT_COLUMN, LABEL_COLUMN]
+
+    chunks = pd.read_csv(
+        input_csv_path,
+        usecols=use_columns,
+        chunksize=50000,
+        low_memory=False,
+    )
+
+    collected = []
+
+    for chunk in chunks:
+        chunk = chunk.dropna(subset=[TEXT_COLUMN, LABEL_COLUMN])
+        chunk = chunk[chunk[LABEL_COLUMN].isin(SELECTED_PRODUCTS)]
+
+        collected.append(chunk)
+
+    df = pd.concat(collected, ignore_index=True)
+
+    sampled_df = (
+        df.groupby(LABEL_COLUMN, group_keys=False)
+        .sample(
+            n=samples_per_class,
+            random_state=random_state,
+        )
+        .reset_index(drop=True)
+    )
+
+    sampled_df = sampled_df.rename(
+        columns={
+            TEXT_COLUMN: "complaint_text",
+            LABEL_COLUMN: "product_category",
+        }
+    )
+
+    sampled_df.insert(0, "record_id", range(1, len(sampled_df) + 1))
+
+    output_csv_path.parent.mkdir(parents=True, exist_ok=True)
+
+    sampled_df.to_csv(output_csv_path, index=False)
+
+    logger.info("Training dataset saved to %s", output_csv_path)
+    logger.info("Training dataset size: %s", len(sampled_df))
