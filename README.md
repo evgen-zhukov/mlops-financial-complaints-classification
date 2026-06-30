@@ -38,6 +38,15 @@ data/processed/financial_complaints_sample.parquet
 
 The sample contains 200 records, 40 records per category.
 
+## Technologies
+
+- Python
+- DVC
+- MinIO
+- MLflow
+- Ray
+- AWS EC2
+- Scikit-learn
 
 ## Data Preparation
 
@@ -128,3 +137,24 @@ annotation export JSON
 DVC versioning
         ->
 MinIO object storage
+
+## Model Training
+
+Training is executed on AWS EC2.
+
+Example of one of the trainings:
+python scripts/train_model.py \
+    --run-name baseline \
+    --max-features 3000 \
+    --ngram-max 1 \
+    --c 1.0
+
+Components:
+
+- DVC
+- MinIO
+- Ray
+- MLflow Tracking
+- MLflow Model Registry
+
+
