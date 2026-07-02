@@ -23,3 +23,10 @@ Thumbs.db
 !/data/raw/*.dvc
 !/data/processed/*.dvc
 !/data/labeled/*.dvc
+
+# MLflow
+artifacts/
+mlflow.db
+
+# Training outputs
+classification_report.txt

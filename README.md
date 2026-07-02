@@ -157,4 +157,19 @@ Components:
 - MLflow Tracking
 - MLflow Model Registry
 
+### Complaints API
+The inference service loads model metadata from MLflow Model Registry.
+Since this project uses a local MLflow artifact store on EC2, the artifacts directory is mounted into the Docker container.
+The model itself is not stored in the GitHub repository.
+
+sudo docker build -t financial-complaints-api .
+
+sudo docker run -d \
+  --name complaints-api \
+  --restart unless-stopped \
+  --network host \
+  -e MLFLOW_TRACKING_URI=http://localhost:5000 \
+  -v /home/ubuntu/mlops-hw2/mlops-financial-complaints-classification/artifacts:/home/ubuntu/mlops-hw2/mlops-financial-complaints-classification/artifacts \
+  financial-complaints-api
+
 
