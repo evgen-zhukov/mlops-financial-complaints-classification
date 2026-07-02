@@ -2,18 +2,15 @@
 
 ## Project Overview
 
-This project implements the first stage of an MLOps pipeline for financial complaint classification.
+This project implements an end-to-end MLOps pipeline for financial complaint classification.
 
-
-The goal of this homework is to demonstrate data management practices:
-* infrasrtucture rollout in an AWS EC2 Instance + Docker
-* dataset preparation
-* data annotation with Label Studio
-* dataset versioning with DVC
-* object storage using MinIO
-* reproducible project structure
-
-The selected use case is classification of financial consumer complaints into product categories.
+The current version includes:
+- dataset preparation and versioning with DVC
+- annotation with Label Studio
+- experiment tracking and model registry with MLflow
+- model training on AWS EC2
+- model inference with FastAPI and Docker
+- model loading directly from MLflow Model Registry
 
 ## Dataset
 
@@ -38,6 +35,14 @@ data/processed/financial_complaints_sample.parquet
 
 The sample contains 200 records, 40 records per category.
 
+The final training dataset used for model training contains 2,500 labeled complaints, balanced across five product categories:
+
+- Credit card — 500
+- Checking or savings account — 500
+- Mortgage — 500
+- Debt collection — 500
+- Credit reporting — 500
+
 ## Technologies
 
 - Python
@@ -47,6 +52,9 @@ The sample contains 200 records, 40 records per category.
 - Ray
 - AWS EC2
 - Scikit-learn
+- FastAPI
+- Docker
+- MLflow Model Registry
 
 ## Data Preparation
 
@@ -157,14 +165,20 @@ Components:
 - MLflow Tracking
 - MLflow Model Registry
 
-### Complaints API
-The inference service loads model metadata from MLflow Model Registry.
-Since this project uses a local MLflow artifact store on EC2, the artifacts directory is mounted into the Docker container.
-The model itself is not stored in the GitHub repository.
+## Model API Inference
 
-sudo docker build -t financial-complaints-api .
+The inference service is implemented using FastAPI and Docker.
 
-sudo docker run -d \
+The application loads the model directly from the MLflow Model Registry during startup. The model is not stored inside the GitHub repository.
+
+# Build Docker Image
+
+docker build -t financial-complaints-api .
+
+
+# Run Inference Service
+
+docker run -d \
   --name complaints-api \
   --restart unless-stopped \
   --network host \
@@ -172,4 +186,43 @@ sudo docker run -d \
   -v /home/ubuntu/mlops-hw2/mlops-financial-complaints-classification/artifacts:/home/ubuntu/mlops-hw2/mlops-financial-complaints-classification/artifacts \
   financial-complaints-api
 
+  Note: MLflow in this project uses a local artifact store on the EC2 instance. Because MLflow stores model artifact paths as local filesystem paths, the `artifacts` directory is mounted into the Docker container. The model itself is not committed to GitHub.
+
+# API Documentation
+
+After the service starts, Swagger UI is available at:
+http://51.20.96.49:8000/docs
+
+
+# Health Check
+GET /health
+
+Example response:
+
+{
+  "status": "healthy",
+  "model_loaded": true,
+  "model_uri": "models:/financial_complaints_classifier/2"
+}
+
+# Prediction
+POST /predict
+
+Example request:
+
+{
+  "complaint_text": "My credit card was charged twice and I want this transaction refunded."
+}
+
+Example response:
+
+{
+  "predicted_category": "Credit card"
+}
+
+## MLflow Model Registry
+
+The inference service loads the model from MLflow Model Registry using the following model URI:
+
+models:/financial_complaints_classifier/2
 
