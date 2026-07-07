@@ -191,7 +191,7 @@ docker run -d \
 # API Documentation
 
 After the service starts, Swagger UI is available at:
-http://51.20.96.49:8000/docs
+http://<EXTERNAL_IP>:8000/docs
 
 
 # Health Check
@@ -226,3 +226,26 @@ The inference service loads the model from MLflow Model Registry using the follo
 
 models:/financial_complaints_classifier/2
 
+## Monitoring
+
+Monitoring is implemented using Prometheus and Grafana.
+
+FastAPI exposes Prometheus metrics at:
+
+GET /metrics
+
+Collected metrics:
+
+prediction_requests_total — total number of prediction requests
+prediction_latency_seconds — prediction latency histogram
+
+Prometheus scrapes the FastAPI service every 15 seconds.
+
+Grafana dashboard:
+
+http://<PUBLIC_IP>:3000
+
+Dashboard panels:
+
+Predictions per minute
+Average prediction latency
