@@ -11,6 +11,13 @@ The current version includes:
 - model training on AWS EC2
 - model inference with FastAPI and Docker
 - model loading directly from MLflow Model Registry
+- monitoring with Prometheus and Grafana
+- continuous integration using GitHub Actions
+
+## Architecture
+
+CFPB Dataset -> Data Preparation -> 
+Label Studio -> DVC + MinIO -> Model Training -> MLflow Tracking -> MLflow Model Registry -> FastAPI + Docker -> Prometheus -> Grafana
 
 ## Dataset
 
@@ -55,6 +62,9 @@ The final training dataset used for model training contains 2,500 labeled compla
 - FastAPI
 - Docker
 - MLflow Model Registry
+- Prometheus
+- Grafana
+- GitHub Actions
 
 ## Data Preparation
 
@@ -220,6 +230,9 @@ Example response:
   "predicted_category": "Credit card"
 }
 
+GET /metrics
+
+
 ## MLflow Model Registry
 
 The inference service loads the model from MLflow Model Registry using the following model URI:
@@ -249,3 +262,16 @@ Dashboard panels:
 
 Predictions per minute
 Average prediction latency
+
+![CI](https://github.com/evgen-zhukov/mlops-financial-complaints-classification/actions/workflows/ci.yml/badge.svg)
+
+## CI
+
+This project uses GitHub Actions.
+
+On every push to the `main` branch the workflow automatically:
+
+- checks out the repository;
+- builds the Docker image for the inference service.
+
+This ensures that the project remains deployable after every change.
